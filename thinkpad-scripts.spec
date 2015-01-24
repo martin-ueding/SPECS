@@ -27,6 +27,7 @@ Source0:        http://bulk.martin-ueding.de/source/%{name}/%{name}_%{version}.t
 #Patch:
 BuildRequires:  gettext python3-setuptools python3-sphinx python-termcolor
 BuildArch:      noarch
+Requires:       acpid alsa-utils python3-setuptools python-termcolor udev xinput xorg-x11-server-utils
 #PreReq:
 #Provides:       think-rotate think-dock
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
