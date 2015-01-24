@@ -17,8 +17,8 @@
 #
 
 Name:           thinkpad-scripts
-Version:        4.2.1
-Release:        2
+Version:        4.2.2
+Release:        1
 License:        GPL
 Summary:        Rotate scripts for Lenovo ThinkPad
 Url:            http://martin-ueding.de/en/projects/%{name}
@@ -26,9 +26,9 @@ Source0:        http://bulk.martin-ueding.de/source/%{name}/%{name}_%{version}.t
 #Group:
 #Source:         %{name}_%{version}.tar.gz
 #Patch:
-BuildRequires:  gettext python3-setuptools python3-sphinx python-termcolor python3-devel
+BuildRequires:  gettext python3-setuptools python3-sphinx python3-devel
 BuildArch:      noarch
-Requires:       acpid alsa-utils python3-setuptools python-termcolor udev xinput xorg-x11-server-utils
+Requires:       acpid alsa-utils python3-setuptools udev xinput xorg-x11-server-utils
 #PreReq:
 #Provides:       think-rotate think-dock
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -43,7 +43,7 @@ make %{?_smp_mflags} SPHINXBUILD=sphinx-build-3
 
 %install
 %make_install
-%{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
+%{__python3} setup.py install --root $RPM_BUILD_ROOT
 
 %post
 systemctl restart acpid
@@ -64,6 +64,9 @@ udevadm hwdb --update
 %{python3_sitelib}/*
 
 %changelog
+* Sat Jan 24 2015 Martin Ueding <dev@martin-ueding.de> 4.2.2-1
+- New upstream version that does not depend on termcolor any more.
+
 * Sat Jan 24 2015 Martin Ueding <dev@martin-ueding.de> 4.2.1-2
 - Fix %files section where I previously attemted to own `/`.
 
