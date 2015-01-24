@@ -1,5 +1,6 @@
-#
-# spec file for package 
+# Copyright © 2015 Martin Ueding <dev@martin-ueding.de>
+
+# spec file for package thinkpad-scripts
 #
 # Copyright (c) 2013 SUSE LINUX Products GmbH, Nuernberg, Germany.
 #
@@ -25,7 +26,7 @@ Source0:        http://bulk.martin-ueding.de/source/%{name}/%{name}_%{version}.t
 #Group:
 #Source:         %{name}_%{version}.tar.gz
 #Patch:
-BuildRequires:  gettext python3-setuptools python3-sphinx python-termcolor
+BuildRequires:  gettext python3-setuptools python3-sphinx python-termcolor python3-devel
 BuildArch:      noarch
 Requires:       acpid alsa-utils python3-setuptools python-termcolor udev xinput xorg-x11-server-utils
 #PreReq:
@@ -42,8 +43,11 @@ make %{?_smp_mflags} SPHINXBUILD=sphinx-build-3
 
 %install
 %make_install
+%{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
 
 %post
+systemctl restart acpid
+udevadm hwdb --update
 
 %postun
 
