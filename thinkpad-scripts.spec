@@ -18,7 +18,7 @@
 
 Name:           thinkpad-scripts
 Version:        4.2.1
-Release:        1
+Release:        2
 License:        GPL
 Summary:        Rotate scripts for Lenovo ThinkPad
 Url:            http://martin-ueding.de/en/projects/%{name}
@@ -53,8 +53,19 @@ udevadm hwdb --update
 
 %files
 %defattr(-,root,root)
-/
+
 %doc CHANGELOG.rst README.rst COPYING.rst
+/etc/acpi/events/*
+/lib/udev/hwdb.d/*
+/lib/udev/rules.d/*
+/usr/bin/*
+/usr/share/applications/*
+/usr/share/man/man1/*
+%{python3_sitelib}/*
 
 %changelog
+* Sat Jan 24 2015 Martin Ueding <dev@martin-ueding.de> 4.2.1-2
+- Fix %files section where I previously attemted to own `/`.
 
+* Sat Jan 24 2015 Martin Ueding <dev@martin-ueding.de> 4.2.1-1
+- Initial packaging
