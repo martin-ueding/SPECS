@@ -15,19 +15,20 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
-Name:           think-rotate
-Version:        2.7.1
+Name:           thinkpad-scripts
+Version:        4.2.1
 Release:        1
 License:        GPL
 Summary:        Rotate scripts for Lenovo ThinkPad
-Url:            http://martin-ueding.de/en/projects/think-rotate
+Url:            http://martin-ueding.de/en/projects/%{name}
+Source0:        http://bulk.martin-ueding.de/source/%{name}/%{name}_%{version}.tar.gz
 #Group:
-Source:         %{name}_%{version}.tar.gz
+#Source:         %{name}_%{version}.tar.gz
 #Patch:
-BuildRequires:  python-docutils
+BuildRequires:  gettext python3-setuptools python3-sphinx python-termcolor
 BuildArch:      noarch
 #PreReq:
-Provides:       think-rotate think-dock
+#Provides:       think-rotate think-dock
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
@@ -36,7 +37,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %setup -q
 
 %build
-make %{?_smp_mflags}
+make %{?_smp_mflags} SPHINXBUILD=sphinx-build-3
 
 %install
 %make_install
