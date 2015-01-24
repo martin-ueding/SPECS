@@ -18,7 +18,7 @@
 
 Name:           thinkpad-scripts
 Version:        4.2.2
-Release:        1
+Release:        2
 License:        GPL
 Summary:        Rotate scripts for Lenovo ThinkPad
 Url:            http://martin-ueding.de/en/projects/%{name}
@@ -64,6 +64,9 @@ udevadm hwdb --update
 %{python3_sitelib}/*
 
 %changelog
+* Sat Jan 24 2015 Martin Ueding <dev@martin-ueding.de> 4.2.2-2
+- Do compile the Python module
+
 * Sat Jan 24 2015 Martin Ueding <dev@martin-ueding.de> 4.2.2-1
 - New upstream version that does not depend on termcolor any more.
 
