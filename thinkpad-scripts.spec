@@ -17,8 +17,8 @@
 #
 
 Name:           thinkpad-scripts
-Version:        4.2.2
-Release:        2
+Version:        4.2.5
+Release:        1
 License:        GPL
 Summary:        Rotate scripts for Lenovo ThinkPad
 Url:            http://martin-ueding.de/en/projects/%{name}
@@ -26,9 +26,26 @@ Source0:        http://bulk.martin-ueding.de/source/%{name}/%{name}_%{version}.t
 #Group:
 #Source:         %{name}_%{version}.tar.gz
 #Patch:
-BuildRequires:  gettext python3-setuptools python3-sphinx python3-devel
+BuildRequires:  gettext python3-setuptools python3-devel
+
+%if 0%{?suse_version}
+BuildRequires:  oxygen-icon-theme
+BuildRequires:  python3-Sphinx
+BuildRequires:  systemd
+BuildRequires:  udev
+BuildRequires:  update-desktop-files
+%else
+BuildRequires:  python3-sphinx
+%endif
+
 BuildArch:      noarch
 Requires:       acpid alsa-utils python3-setuptools udev xinput xorg-x11-server-utils
+
+%if 0%{?suse_version}
+Requires:       systemd
+Requires:       udev
+%endif
+
 #PreReq:
 #Provides:       think-rotate think-dock
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -38,35 +55,53 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %prep
 %setup -q
 
+%if 0%{?suse_version}
+%define sphinx_build sphinx-build
+%else
+%define sphinx_build sphinx-build-3
+%endif
+
 %build
-make %{?_smp_mflags} SPHINXBUILD=sphinx-build-3
+make %{?_smp_mflags} SPHINXBUILD=%{sphinx_build}
 
 %install
 %make_install
-%{__python3} setup.py install --root $RPM_BUILD_ROOT
+python3 setup.py install --skip-build --root $RPM_BUILD_ROOT
+
+%if 0%{?suse_version}
+%suse_update_desktop_file -r thinkpad-dock-off System HardwareSettings
+%suse_update_desktop_file -r thinkpad-dock-on System HardwareSettings
+%suse_update_desktop_file -r thinkpad-rotate System Monitor
+%suse_update_desktop_file -r thinkpad-rotate-flip System Monitor
+%suse_update_desktop_file -r thinkpad-rotate-left System Monitor
+%suse_update_desktop_file -r thinkpad-touch System HardwareSettings
+%suse_update_desktop_file -r thinkpad-touchpad System HardwareSettings
+%suse_update_desktop_file -r thinkpad-touchpad System HardwareSettings
+%endif
 
 %post
 systemctl restart acpid
 udevadm hwdb --update
 
 %postun
+systemctl restart acpid
+udevadm hwdb --update
 
 %files
 %defattr(-,root,root)
 
 %doc CHANGELOG.rst README.rst COPYING.rst
+%{python3_sitelib}/*
+/etc/acpi
+/etc/acpi/events
 /etc/acpi/events/*
 /lib/udev/hwdb.d/*
 /lib/udev/rules.d/*
 /usr/bin/*
 /usr/share/applications/*
 /usr/share/man/man1/*
-%{python3_sitelib}/*
 
 %changelog
-* Sat Jan 24 2015 Martin Ueding <dev@martin-ueding.de> 4.2.2-2
-- Do compile the Python module
-
 * Sat Jan 24 2015 Martin Ueding <dev@martin-ueding.de> 4.2.2-1
 - New upstream version that does not depend on termcolor any more.
 
