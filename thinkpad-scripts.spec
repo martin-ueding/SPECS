@@ -17,14 +17,13 @@
 #
 
 Name:           thinkpad-scripts
-Version:        4.2.5
+Version:        4.4.0
 Release:        1
-License:        GPL
+License:        GPL-2.0+
 Summary:        Rotate scripts for Lenovo ThinkPad
 Url:            http://martin-ueding.de/en/projects/%{name}
 Source0:        http://bulk.martin-ueding.de/source/%{name}/%{name}_%{version}.tar.gz
 #Group:
-#Source:         %{name}_%{version}.tar.gz
 #Patch:
 BuildRequires:  gettext python3-setuptools python3-devel
 
@@ -39,11 +38,13 @@ BuildRequires:  python3-sphinx
 %endif
 
 BuildArch:      noarch
-Requires:       acpid alsa-utils python3-setuptools udev xinput xorg-x11-server-utils
+Requires:       acpid alsa-utils python3-setuptools udev xinput 
 
 %if 0%{?suse_version}
 Requires:       systemd
-Requires:       udev
+Requires:       xrandr
+%else
+Requires:       xorg-x11-server-utils
 %endif
 
 #PreReq:
@@ -51,6 +52,23 @@ Requires:       udev
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
+
+This collection of scripts is intended for the Lenovo ThinkPad X220 Tablet. You
+can still use them with the regular X220 machine, but only ``thinkpad-rotate``
+will probably be useless for you then. I think that most scripts will also be
+handy for other ThinkPad models, I have not tested them though.
+
+In short, this script fixes or improves the following:
+
+1. Rotation of the internal screen and any Wacom touch and pen input devices
+   using the bezel buttons or physical screen rotation
+
+2. Get the microphone mute button to work.
+
+3. Automatically use any external monitor, speakers and LAN connection when
+   docking onto an UltraBase or similar.
+
+4. Ability to disable touch pad or touch screen
 
 %prep
 %setup -q
@@ -66,7 +84,7 @@ make %{?_smp_mflags} SPHINXBUILD=%{sphinx_build}
 
 %install
 %make_install
-python3 setup.py install --skip-build --root $RPM_BUILD_ROOT
+python3 setup.py install --prefix=%{_prefix} --root=%{buildroot}
 
 %if 0%{?suse_version}
 %suse_update_desktop_file -r thinkpad-dock-off System HardwareSettings
@@ -80,11 +98,11 @@ python3 setup.py install --skip-build --root $RPM_BUILD_ROOT
 %endif
 
 %post
-systemctl restart acpid
+systemctl restart acpid.service || true
 udevadm hwdb --update
 
 %postun
-systemctl restart acpid
+systemctl restart acpid.service || true
 udevadm hwdb --update
 
 %files
@@ -106,7 +124,7 @@ udevadm hwdb --update
 - New upstream version that does not depend on termcolor any more.
 
 * Sat Jan 24 2015 Martin Ueding <dev@martin-ueding.de> 4.2.1-2
-- Fix %files section where I previously attemted to own `/`.
+- Fix %%files section where I previously attemted to own `/`.
 
 * Sat Jan 24 2015 Martin Ueding <dev@martin-ueding.de> 4.2.1-1
 - Initial packaging
