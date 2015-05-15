@@ -16,18 +16,15 @@
 #
 
 Name:           maintenance
-Version:        1.7.15
+Version:        1.12.4
 Release:        1
 License:        GPL
 Summary:        My maintenance scripts
-#Url:
-#Group:
-Source:         %{name}_%{version}.tar.gz
-#Patch:
-#BuildRequires:
+Url:            http://martin-ueding.de/en/projects/%{name}
+Source0:        http://bulk.martin-ueding.de/source/%{name}/%{name}_%{version}.tar.gz
+BuildRequires:  python3-setuptools
 BuildArch:      noarch
-PreReq:         bash python
-Provides:       maintenance
+Requires:       bash python3-setuptools python python3-prettytable 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
 %description
@@ -36,10 +33,9 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %setup -q
 
 %build
-make %{?_smp_mflags}
 
 %install
-%make_install
+python3 setup.py install --prefix=%{_prefix} --root=%{buildroot}
 
 %post
 
@@ -47,8 +43,9 @@ make %{?_smp_mflags}
 
 %files
 %defattr(-,root,root)
-/
 %doc CHANGELOG.rst README.rst COPYING.rst
+%{python3_sitelib}/*
+/usr/bin/*
 
 %changelog
 
