@@ -17,7 +17,7 @@
 #
 
 Name:           thinkpad-scripts
-Version:        4.4.0
+Version:        4.7.1
 Release:        1
 License:        GPL-2.0+
 Summary:        Rotate scripts for Lenovo ThinkPad
@@ -84,7 +84,8 @@ make %{?_smp_mflags} SPHINXBUILD=%{sphinx_build}
 
 %install
 %make_install
-python3 setup.py install --prefix=%{_prefix} --root=%{buildroot}
+/usr/bin/python3 setup.py install --prefix=%{_prefix} --root=%{buildroot}
+#%py3_install
 
 %if 0%{?suse_version}
 %suse_update_desktop_file -r thinkpad-dock-off System HardwareSettings
